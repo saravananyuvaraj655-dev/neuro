@@ -1,5 +1,5 @@
 import { Truck, MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from './ui/button';
 
 const ambulances = [
   { id: 'AMB-01', driver: 'Suresh K.', location: 'Near Block A', status: 'Available', phone: '+91-98765-43210' },

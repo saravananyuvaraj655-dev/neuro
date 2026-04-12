@@ -14,7 +14,7 @@ import AmbulanceSection from '../components/AmbulanceSection';
 import HospitalAppointments from '../components/HospitalAppointments';
 import PatientRegistration from '../components/PatientRegistration';
 import { getOverallStatus, getFirstAidSuggestions, type VitalSign } from '@/lib/vitals';
-import { fetchBlynkVitals } from '@/lib/blynk';
+import { fetchBlynkVitals } from '../lib/blynk';
 import { User, Wifi, WifiOff, Bell, LogOut, Heart, Stethoscope, Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
 
