@@ -1,5 +1,5 @@
 import { AlertTriangle, Eye } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from './ui/button';
 
 const emergencies = [
   { id: 'P-1042', name: 'Rajesh Verma', age: 67, type: 'Multiple Abnormal Vitals — SpO₂ 86%, HR 135 bpm', time: '2 min ago', severity: 'critical' },

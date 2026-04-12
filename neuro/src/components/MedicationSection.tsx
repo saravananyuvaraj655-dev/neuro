@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Check, Clock, Pill, Bell, BellRing, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from './ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Medication {

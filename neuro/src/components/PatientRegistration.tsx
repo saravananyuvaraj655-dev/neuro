@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { UserPlus, Heart, Shield, Activity, Loader2, CheckCircle, XCircle, Wifi } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { validateBlynkToken } from '@/lib/blynk';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { validateBlynkToken } from '../lib/blynk';
 
 interface PatientFormData {
   fullName: string;

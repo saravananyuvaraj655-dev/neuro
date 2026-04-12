@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FolderOpen, Upload, FileText, Image, Download, Eye } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import type { MedicalRecord } from '@/lib/vitals';
+import { Button } from './ui/button';
+import type { MedicalRecord } from '../lib/vitals';
 
 const initialRecords: MedicalRecord[] = [
   { id: '1', name: 'Blood Test Report - March 2026', type: 'PDF', date: '2026-03-20', size: '1.2 MB' },

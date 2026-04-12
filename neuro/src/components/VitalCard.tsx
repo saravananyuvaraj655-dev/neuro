@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import type { VitalSign } from '@/lib/vitals';
+import type { VitalSign } from '../lib/vitals';
 
 interface VitalCardProps {
   vital: VitalSign;

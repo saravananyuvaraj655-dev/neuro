@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Search, User, Shield, Eye, ArrowLeft, Phone, Hash, Loader2, CheckCircle } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
-import VitalCard from '@/components/VitalCard';
-import ECGChart from '@/components/ECGChart';
-import StatusBanner from '@/components/StatusBanner';
-import FallDetection from '@/components/FallDetection';
-import { fetchBlynkVitals } from '@/lib/blynk';
-import { getOverallStatus, getFirstAidSuggestions, type VitalSign } from '@/lib/vitals';
+import VitalCard from './VitalCard';
+import ECGChart from './ECGChart';
+import StatusBanner from './StatusBanner';
+import FallDetection from './FallDetection';
+import { fetchBlynkVitals } from '../lib/blynk';
+import { getOverallStatus,type VitalSign,getFirstAidSuggestions } from '../lib/vitals';
 import { useEffect } from 'react';
 
 // Mock registered patients (in real app this would come from a database)
