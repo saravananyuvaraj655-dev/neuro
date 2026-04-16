@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { CalendarDays, Plus, X, Clock, Send } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { Appointment } from '@/lib/vitals';
+import type { Appointment } from '../lib/vitals';
 
 const initialAppointments: Appointment[] = [
   { id: '1', doctorName: 'Dr. Sarah Patel', specialty: 'Neurologist', date: '2026-04-05', time: '10:00 AM', status: 'scheduled' },
