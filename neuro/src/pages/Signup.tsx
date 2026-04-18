@@ -28,11 +28,12 @@ const Signup = () => {
   const navigate = useNavigate();
   const [pendingProfile, setPendingProfile] = useState<PatientFormData | null>(null);
 
+  // Receive form data from PatientRegistration; hold until OTP verified
   const handleRegisterAttempt = (data: PatientFormData) => {
-    // Hold the data; do NOT save until OTP verifies.
     setPendingProfile(data);
   };
 
+  // OTP verified → persist profile and redirect
   const handleVerified = () => {
     if (!pendingProfile) return;
     localStorage.setItem('neurotrack_patient', JSON.stringify(pendingProfile));
@@ -41,6 +42,7 @@ const Signup = () => {
     navigate('/');
   };
 
+  // OTP verification step (shown after form submit)
   if (pendingProfile) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-background">
@@ -55,6 +57,7 @@ const Signup = () => {
           >
             <ArrowLeft className="w-3 h-3" /> Back to form
           </button>
+
           <EmailOTPVerification
             email={pendingProfile.email}
             onVerified={handleVerified}
@@ -66,6 +69,7 @@ const Signup = () => {
     );
   }
 
+  // Registration form step
   return (
     <div>
       <PatientRegistration onRegister={handleRegisterAttempt} />

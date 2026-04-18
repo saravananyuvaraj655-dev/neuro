@@ -50,7 +50,7 @@ const EmailOTPVerification = ({
       const code = generateOtp();
       await sendOtpEmail(email.trim(), code);
       setPending({ code, email: email.trim(), expiresAt: Date.now() + OTP_TTL_MS });
-      setSuccess(`OTP sent to ${email.trim()}`);
+      setSuccess(`OTP sent to ${email.trim()}. Check your inbox (or console in dev mode).`);
       setCooldown(30);
       setOtp('');
     } catch (e: unknown) {
@@ -77,8 +77,7 @@ const EmailOTPVerification = ({
       return;
     }
     setVerifying(true);
-    // Tiny delay for UX so users perceive the verification
-    await new Promise((r) => setTimeout(r, 250));
+    await new Promise((r) => setTimeout(r, 350));
     if (otp === pending.code) {
       setSuccess('Verified successfully!');
       onVerified();
@@ -103,6 +102,7 @@ const EmailOTPVerification = ({
         <p className="text-xs text-muted-foreground">{subtitle}</p>
       </div>
 
+      {/* Email field */}
       <div className="space-y-2">
         <label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
           <Mail className="w-3 h-3" />
@@ -117,16 +117,18 @@ const EmailOTPVerification = ({
         />
       </div>
 
+      {/* Step 1 — Send OTP */}
       {!pending ? (
         <Button
           onClick={handleSendOtp}
-          disabled={sending}
+          disabled={sending || !email.trim()}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white"
         >
-          {sending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-          {sending ? 'Sending OTP...' : 'Send OTP'}
+          {sending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+          {sending ? 'Sending OTP…' : 'Send OTP'}
         </Button>
       ) : (
+        /* Step 2 — Enter OTP */
         <div className="space-y-3">
           <div>
             <label className="text-xs font-semibold text-muted-foreground mb-1.5 block">
@@ -141,19 +143,22 @@ const EmailOTPVerification = ({
               className="font-mono text-center text-lg tracking-[0.5em]"
             />
           </div>
+
           <Button
             onClick={handleVerify}
             disabled={verifying || otp.length !== 6}
             className="w-full bg-green-600 hover:bg-green-700 text-white"
           >
-            {verifying ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-            {verifying ? 'Verifying...' : 'Verify OTP'}
+            {verifying && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            {verifying ? 'Verifying…' : 'Verify OTP'}
           </Button>
+
+          {/* Resend */}
           <button
             type="button"
             onClick={handleSendOtp}
             disabled={cooldown > 0 || sending}
-            className="w-full text-xs text-muted-foreground hover:text-foreground flex items-center justify-center gap-1.5 disabled:opacity-50"
+            className="w-full text-xs text-muted-foreground hover:text-foreground flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <RotateCw className="w-3 h-3" />
             {cooldown > 0 ? `Resend OTP in ${cooldown}s` : 'Resend OTP'}
@@ -161,6 +166,7 @@ const EmailOTPVerification = ({
         </div>
       )}
 
+      {/* Feedback */}
       {error && (
         <div className="text-xs font-medium px-3 py-2 rounded-lg bg-destructive/10 text-destructive">
           {error}

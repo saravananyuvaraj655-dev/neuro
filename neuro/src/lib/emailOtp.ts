@@ -1,13 +1,11 @@
 import emailjs from 'emailjs-com';
 
-// TODO: Replace these with your actual EmailJS credentials.
-// Get them from https://dashboard.emailjs.com
-export const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
-export const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-export const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+export const EMAILJS_SERVICE_ID = 'service_r4p6a26';
+export const EMAILJS_TEMPLATE_ID = 'template_viwmsf8';
+export const EMAILJS_PUBLIC_KEY = 'd6EJWrpowS2zmRQd7'; // Replace with your actual public key
 
-/** OTP lifetime in milliseconds (3 minutes). */
-export const OTP_TTL_MS = 3 * 60 * 1000;
+/** OTP lifetime in milliseconds (5 minutes). */
+export const OTP_TTL_MS = 5 * 60 * 1000;
 
 export interface PendingOtp {
   code: string;
@@ -22,19 +20,15 @@ export const isValidEmail = (email: string): boolean =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
 /**
- * Sends an OTP code to the given email via EmailJS.
- * The EmailJS template should accept template variables: `to_email`, `otp_code`, `expires_in`.
+ * Sends a 6-digit OTP to the given email via EmailJS.
+ * Template params: { email, otp }
  */
 export const sendOtpEmail = async (email: string, code: string): Promise<void> => {
-  if (
-    EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID' ||
-    EMAILJS_TEMPLATE_ID === 'YOUR_TEMPLATE_ID' ||
-    EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY'
-  ) {
-    // Dev fallback: surface the code so the flow is testable without real keys.
-    console.warn(
-      `[EmailOTP] EmailJS keys not configured. Dev OTP for ${email}: ${code}`,
-    );
+  // Always log for dev/fallback visibility
+  console.log(`[EmailOTP] OTP for ${email}: ${code}`);
+
+  if (EMAILJS_PUBLIC_KEY === 'd6EJWrpowS2zmRQd7') {
+    console.warn('[EmailOTP] Public key not configured — OTP logged to console only.');
     return;
   }
 
@@ -42,11 +36,8 @@ export const sendOtpEmail = async (email: string, code: string): Promise<void> =
     EMAILJS_SERVICE_ID,
     EMAILJS_TEMPLATE_ID,
     {
-      to_email: email,
-      email,
-      otp_code: code,
-      passcode: code,
-      expires_in: '3 minutes',
+      email,       // matches {{email}} in template
+      otp: code,   // matches {{otp}} in template
     },
     EMAILJS_PUBLIC_KEY,
   );

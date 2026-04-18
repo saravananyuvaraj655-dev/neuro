@@ -10,6 +10,7 @@ const Login = () => {
 
   const handleVerified = () => {
     localStorage.setItem('neurotrack_authed_email', email.trim());
+    // Preserve existing role or default to patient if profile exists
     const hasProfile = !!localStorage.getItem('neurotrack_patient');
     if (!localStorage.getItem('neurotrack_role')) {
       localStorage.setItem('neurotrack_role', hasProfile ? 'patient' : 'doctor');
@@ -25,7 +26,7 @@ const Login = () => {
         className="w-full max-w-md space-y-6"
       >
         <div className="text-center">
-          <div className="w-14 h-14 rounded-2xl medical-gradient flex items-center justify-center mx-auto mb-3">
+          <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center mx-auto mb-3">
             <Heart className="w-7 h-7 text-primary-foreground" />
           </div>
           <h1 className="font-display text-2xl font-bold text-foreground">Welcome back</h1>
