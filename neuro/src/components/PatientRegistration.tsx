@@ -11,6 +11,7 @@ interface PatientFormData {
   gender: string;
   bloodGroup: string;
   contactNumber: string;
+  email: string; // ✅ ADD THIS LINE
   emergencyContactName: string;
   emergencyContactNumber: string;
   emergencyContactRelation: string;
@@ -33,6 +34,7 @@ const initialForm: PatientFormData = {
   gender: '',
   bloodGroup: '',
   contactNumber: '',
+  email: '', // ✅ ADD THIS
   emergencyContactName: '',
   emergencyContactNumber: '',
   emergencyContactRelation: '',
@@ -44,7 +46,6 @@ const initialForm: PatientFormData = {
   preferredHospital: '',
   blynkAuthToken: '',
 };
-
 const genders = ['Male', 'Female', 'Other'];
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
@@ -80,7 +81,13 @@ const PatientRegistration = ({ onRegister }: PatientRegistrationProps) => {
     }
   };
 
-  const canProceedStep1 = form.fullName && form.age && form.gender && form.bloodGroup && form.contactNumber;
+ const canProceedStep1 =
+  form.fullName &&
+  form.age &&
+  form.gender &&
+  form.bloodGroup &&
+  form.contactNumber &&
+  form.email; // ✅ REQUIRED
   const canProceedStep2 = form.emergencyContactName && form.emergencyContactNumber && form.emergencyContactRelation;
   const canSubmit = canProceedStep1 && canProceedStep2 && form.blynkAuthToken.trim() && (blynkStatus === 'valid' || blynkStatus === 'online');
 
@@ -139,6 +146,17 @@ const PatientRegistration = ({ onRegister }: PatientRegistrationProps) => {
                   <Input placeholder="Enter full name" value={form.fullName} onChange={e => update('fullName', e.target.value)} />
                 </div>
                 <div>
+                  <div>
+  <label className="text-xs font-semibold text-muted-foreground mb-1.5 block">
+    Email *
+  </label>
+  <Input
+    type="email"
+    placeholder="Enter email"
+    value={form.email}
+    onChange={e => update('email', e.target.value)}
+  />
+</div>
                   <label className="text-xs font-semibold text-muted-foreground mb-1.5 block">Age *</label>
                   <Input type="number" placeholder="e.g. 55" value={form.age} onChange={e => update('age', e.target.value)} />
                 </div>
