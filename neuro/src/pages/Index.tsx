@@ -23,10 +23,12 @@ import { getAmbulanceAlert, getEmergencyAlert, handleEmergency, type AmbulanceAl
 
 // ---------- Welcome screen ----------
 const WelcomeScreen = ({
+  
   onSelectRole,
 }: {
   onSelectRole: (role: 'patient' | 'doctor', mode: 'login' | 'signup') => void;
 }) => (
+  
   <div className="min-h-screen flex items-center justify-center bg-background p-6">
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -81,6 +83,7 @@ const WelcomeScreen = ({
               </button>
             </div>
           </div>
+          
         ))}
       </div>
     </motion.div>
@@ -117,6 +120,7 @@ const Index = () => {
   });
 
   const [isRegistered, setIsRegistered] = useState(() => !!localStorage.getItem('neurotrack_patient'));
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [patient, setPatient] = useState<PatientProfile | null>(() => {
     const saved = localStorage.getItem('neurotrack_patient');
     return saved ? JSON.parse(saved) : null;
@@ -192,6 +196,17 @@ const Index = () => {
     return () => clearInterval(interval);
   }, [isRegistered, patient?.blynkAuthToken]);
 
+useEffect(() => {
+  const handler = (e: any) => {
+    e.preventDefault();
+    console.log("✅ Install prompt ready");
+    setDeferredPrompt(e);
+  };
+
+  window.addEventListener("beforeinstallprompt", handler);
+
+  return () => window.removeEventListener("beforeinstallprompt", handler);
+}, []);
   // ---------- AUTO EMERGENCY TRIGGER ----------
   // Fires automatically whenever the overall status becomes 'emergency'.
   // Cooldown protection (60s) is inside handleEmergency().
@@ -392,6 +407,25 @@ const Index = () => {
           </div>
         </header>
         <div className="p-6 max-w-6xl">{renderContent()}</div>
+        {deferredPrompt && (
+  <button
+    onClick={async () => {
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+
+      if (choice.outcome === "accepted") {
+        console.log("✅ App Installed");
+      } else {
+        console.log("❌ Install Cancelled");
+      }
+
+      setDeferredPrompt(null);
+    }}
+    className="fixed bottom-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50"
+  >
+    📲 Install App
+  </button>
+)}
       </main>
     </div>
   );
