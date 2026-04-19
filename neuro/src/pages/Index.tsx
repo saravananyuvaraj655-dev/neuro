@@ -352,28 +352,7 @@ useEffect(() => {
       <WelcomeScreen onSelectRole={handleRoleSelect} />
 
       {/* ✅ INSTALL BUTTON (VISIBLE ON FIRST SCREEN) */}
-      <button
-        onClick={async () => {
-          if (deferredPrompt) {
-            deferredPrompt.prompt();
-
-            const choice = await deferredPrompt.userChoice;
-
-            if (choice.outcome === "accepted") {
-              console.log("✅ App Installed");
-            } else {
-              console.log("❌ Install Cancelled");
-            }
-
-            setDeferredPrompt(null);
-          } else {
-            alert("Install not supported. Use Chrome → Add to Home Screen");
-          }
-        }}
-        className="fixed bottom-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50"
-      >
-        📲 Install App
-      </button>
+      
     </>
   );
   if (userRole === 'patient' && !isRegistered) return <PatientRegistration onRegister={handleRegister} />;
