@@ -50,13 +50,12 @@ const DoctorSignup = () => {
     setStep('otp');
   };
 
-  const handleVerified = () => {
-    localStorage.setItem('neurotrack_doctor', JSON.stringify(form));
-    localStorage.setItem('neurotrack_role', 'doctor');
-    localStorage.setItem('neurotrack_authed_user', form.email.trim());
-    navigate('/');
-  };
-
+ const handleVerified = () => {
+  localStorage.setItem('neurotrack_doctor', JSON.stringify(form));
+  localStorage.setItem('neurotrack_role', 'doctor');
+  localStorage.setItem('neurotrack_authed_email', form.email.trim()); // ✅ FIX
+  navigate('/');
+};
   if (step === 'otp') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">

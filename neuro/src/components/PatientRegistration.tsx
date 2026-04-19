@@ -14,6 +14,7 @@ interface PatientFormData {
   email: string; // ✅ ADD THIS LINE
   emergencyContactName: string;
   emergencyContactNumber: string;
+  caregiverEmail: string;
   emergencyContactRelation: string;
   address: string;
   knownAllergies: string;
@@ -37,6 +38,7 @@ const initialForm: PatientFormData = {
   email: '', // ✅ ADD THIS
   emergencyContactName: '',
   emergencyContactNumber: '',
+  caregiverEmail: "",
   emergencyContactRelation: '',
   address: '',
   knownAllergies: '',
@@ -88,7 +90,7 @@ const PatientRegistration = ({ onRegister }: PatientRegistrationProps) => {
   form.bloodGroup &&
   form.contactNumber &&
   form.email; // ✅ REQUIRED
-  const canProceedStep2 = form.emergencyContactName && form.emergencyContactNumber && form.emergencyContactRelation;
+  const canProceedStep2 = form.emergencyContactName && form.emergencyContactNumber && form.caregiverEmail && form.emergencyContactRelation;
   const canSubmit = canProceedStep1 && canProceedStep2 && form.blynkAuthToken.trim() && (blynkStatus === 'valid' || blynkStatus === 'online');
 
   const handleSubmit = () => {
@@ -232,6 +234,17 @@ const PatientRegistration = ({ onRegister }: PatientRegistrationProps) => {
                   <label className="text-xs font-semibold text-muted-foreground mb-1.5 block">Emergency Contact Number *</label>
                   <Input type="tel" placeholder="+91-98765-43210" value={form.emergencyContactNumber} onChange={e => update('emergencyContactNumber', e.target.value)} />
                 </div>
+                <div className="md:col-span-2">
+  <label className="text-xs font-semibold text-muted-foreground mb-1.5 block">
+    Caregiver Email (for Emergency Alerts) *
+  </label>
+  <Input
+    type="email"
+    placeholder="Enter caregiver email"
+    value={form.caregiverEmail}
+    onChange={(e) => update("caregiverEmail", e.target.value)}
+  />
+</div>
                 <div className="md:col-span-2">
                   <label className="text-xs font-semibold text-muted-foreground mb-1.5 block">Relation to Patient *</label>
                   <div className="flex gap-2 flex-wrap">

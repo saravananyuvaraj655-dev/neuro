@@ -9,6 +9,8 @@ import Signup from "./pages/Signup.tsx";
 import DoctorSignup from "./pages/DoctorSignup.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { TooltipProvider } from "./components/ui/tooltip.tsx";
+import PatientLogin from "./pages/PatientLogin";
+
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/doctor-signup" element={<DoctorSignup />} />
+            <Route path="/patient-login" element={<PatientLogin />} />
             {/* Catch-all 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>

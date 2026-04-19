@@ -11,36 +11,21 @@ const Login = () => {
  const handleVerified = () => {
   const userEmail = email.trim().toLowerCase();
 
+  // Get patient data
+  const savedPatient = localStorage.getItem('neurotrack_patient');
+
+ 
+
+  
+
   // Save auth
   localStorage.setItem('neurotrack_authed_email', userEmail);
 
-  // Get patient
-  const savedPatient = localStorage.getItem('neurotrack_patient');
+  // Force patient role
+  localStorage.setItem('neurotrack_role', 'patient');
 
-  if (savedPatient) {
-    try {
-      const p = JSON.parse(savedPatient);
+  console.log("✅ Patient login success");
 
-      const patientEmail = (p.email || "").toLowerCase();
-
-      console.log("Entered:", userEmail);
-      console.log("Stored:", patientEmail);
-
-      // ✅ MATCH EMAIL
-      if (patientEmail === userEmail) {
-        localStorage.setItem('neurotrack_role', 'patient');
-        console.log("➡️ Patient dashboard");
-        navigate('/');
-        return;
-      }
-    } catch (err) {
-      console.error("Patient parse error", err);
-    }
-  }
-
-  // ✅ DEFAULT → DOCTOR
-  localStorage.setItem('neurotrack_role', 'doctor');
-  console.log("➡️ Doctor dashboard");
   navigate('/');
 };
   return (
@@ -63,7 +48,7 @@ const Login = () => {
           </div>
           <h1 className="font-display text-3xl font-bold text-foreground">NeuroTrack</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Real-Time Neuro-Vitals Monitoring
+            Patient login
           </p>
         </div>
 
