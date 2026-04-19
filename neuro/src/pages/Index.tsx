@@ -406,10 +406,11 @@ useEffect(() => {
         </header>
         <div className="p-6 max-w-6xl">{renderContent()}</div>
         
-  {deferredPrompt && (
   <button
-    onClick={async () => {
+  onClick={async () => {
+    if (deferredPrompt) {
       deferredPrompt.prompt();
+
       const choice = await deferredPrompt.userChoice;
 
       if (choice.outcome === "accepted") {
@@ -419,13 +420,15 @@ useEffect(() => {
       }
 
       setDeferredPrompt(null);
-    }}
-    className="fixed bottom-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50"
-  >
-    📲 Install App
-  </button>
-)}
-
+    } else {
+      // 👉 fallback if install not supported
+      alert("Install not supported here. Please use Chrome → Add to Home Screen.");
+    }
+  }}
+  className="fixed bottom-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50"
+>
+  📲 Install App
+</button>
       </main>
     </div>
   );
