@@ -371,19 +371,21 @@ useEffect(() => {
   // ---------- Guards ----------
   if (!userRole)
   return (
-    <>
-      <WelcomeScreen onSelectRole={handleRoleSelect} />
+    <div className="flex flex-col min-h-screen">
+  <div className="flex-1">
+    <WelcomeScreen onSelectRole={handleRoleSelect} />
+  </div>
 
-      {/* 🚀 INSTALL BUTTON */}
-     <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
-  <button
-    onClick={handleInstallClick}
-    className="bg-primary text-white px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition-transform"
-  >
-    📲 Install NeuroTrack App
-  </button>
+  {/* ✅ Sticky install button (no overlap) */}
+  <div className="bg-background border-t p-4">
+    <button
+      onClick={handleInstallClick}
+      className="w-full bg-primary text-white py-3 rounded-xl shadow hover:scale-[1.02] transition-transform"
+    >
+      📲 Install NeuroTrack App
+    </button>
+  </div>
 </div>
-    </>
   );
   if (userRole === 'patient' && !isRegistered) return <PatientRegistration onRegister={handleRegister} />;
 
