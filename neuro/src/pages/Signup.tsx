@@ -29,9 +29,10 @@ const Signup = () => {
   const [pendingProfile, setPendingProfile] = useState<PatientFormData | null>(null);
 
   // Called when PatientRegistration form is submitted
-  const handleRegisterAttempt = (data: PatientFormData) => {
-    setPendingProfile(data);
-  };
+ const handleRegisterAttempt = (data: PatientFormData) => {
+  console.log("🔥 Received in Signup:", data);
+  setPendingProfile(data);
+};
 
   // Called after OTP is verified successfully
   const handleVerified = () => {

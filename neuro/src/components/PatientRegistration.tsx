@@ -93,9 +93,14 @@ const PatientRegistration = ({ onRegister }: PatientRegistrationProps) => {
   const canProceedStep2 = form.emergencyContactName && form.emergencyContactNumber && form.caregiverEmail && form.emergencyContactRelation;
   const canSubmit = canProceedStep1 && canProceedStep2 && form.blynkAuthToken.trim() && (blynkStatus === 'valid' || blynkStatus === 'online');
 
-  const handleSubmit = () => {
-    if (canSubmit) onRegister(form);
-  };
+ const handleSubmit = () => {
+  if (canSubmit) {
+    console.log("✅ Form Submitted:", form);
+    onRegister(form);
+  } else {
+    console.log("❌ Form NOT valid");
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-background">
