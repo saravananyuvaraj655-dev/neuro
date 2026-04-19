@@ -120,7 +120,7 @@ const Index = () => {
   });
 
   const [isRegistered, setIsRegistered] = useState(() => !!localStorage.getItem('neurotrack_patient'));
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>();
   const [patient, setPatient] = useState<PatientProfile | null>(() => {
     const saved = localStorage.getItem('neurotrack_patient');
     return saved ? JSON.parse(saved) : null;
@@ -207,9 +207,7 @@ useEffect(() => {
 
   return () => window.removeEventListener("beforeinstallprompt", handler);
 }, []);
-  // ---------- AUTO EMERGENCY TRIGGER ----------
-  // Fires automatically whenever the overall status becomes 'emergency'.
-  // Cooldown protection (60s) is inside handleEmergency().
+
   const overallStatus = getOverallStatus(vitals);
   const emergencyWithFall = fallDetected ? ('emergency' as const) : overallStatus;
 
@@ -407,7 +405,8 @@ useEffect(() => {
           </div>
         </header>
         <div className="p-6 max-w-6xl">{renderContent()}</div>
-        {deferredPrompt && (
+        
+  {deferredPrompt && (
   <button
     onClick={async () => {
       deferredPrompt.prompt();
@@ -426,6 +425,7 @@ useEffect(() => {
     📲 Install App
   </button>
 )}
+
       </main>
     </div>
   );
