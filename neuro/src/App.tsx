@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
-import { useEffect } from "react";
 
 import Index from "./pages/Index.tsx";
 import Login from "./pages/Login.tsx";
@@ -11,25 +10,9 @@ import NotFound from "./pages/NotFound.tsx";
 import { TooltipProvider } from "./components/ui/tooltip.tsx";
 import PatientLogin from "./pages/PatientLogin";
 
-
 const queryClient = new QueryClient();
 
-function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((reg) => console.log('[PWA] Service worker registered:', reg.scope))
-        .catch((err) => console.warn('[PWA] Service worker registration failed:', err));
-    });
-  }
-}
-
 const App = () => {
-  useEffect(() => {
-    registerServiceWorker();
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -41,7 +24,6 @@ const App = () => {
             <Route path="/signup" element={<Signup />} />
             <Route path="/doctor-signup" element={<DoctorSignup />} />
             <Route path="/patient-login" element={<PatientLogin />} />
-            {/* Catch-all 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
