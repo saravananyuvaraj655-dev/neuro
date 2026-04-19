@@ -357,7 +357,7 @@ const PatientRegistration = ({ onRegister }: PatientRegistrationProps) => {
 
               <div className="flex justify-between pt-4">
                 <Button variant="ghost" onClick={() => setStep(2)}>Back</Button>
-                <Button type="button" onClick={handleSubmit} disabled={!canSubmit}></Button>
+                <Button type="button" onClick={handleSubmit} disabled={!canSubmit}>register &start Monitoring</Button>
               </div>
             </motion.div>
           )}
