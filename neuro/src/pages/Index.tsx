@@ -120,7 +120,7 @@ const Index = () => {
   });
 
   const [isRegistered, setIsRegistered] = useState(() => !!localStorage.getItem('neurotrack_patient'));
-  const [deferredPrompt, setDeferredPrompt] = useState<any>();
+ const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [patient, setPatient] = useState<PatientProfile | null>(() => {
     const saved = localStorage.getItem('neurotrack_patient');
     return saved ? JSON.parse(saved) : null;
@@ -210,6 +210,29 @@ useEffect(() => {
 
   const overallStatus = getOverallStatus(vitals);
   const emergencyWithFall = fallDetected ? ('emergency' as const) : overallStatus;
+
+
+  const handleInstallClick = async () => {
+  if (deferredPrompt) {
+    // ✅ Real install flow
+    deferredPrompt.prompt();
+
+    const choice = await deferredPrompt.userChoice;
+
+    if (choice.outcome === "accepted") {
+      console.log("✅ App installed");
+    } else {
+      console.log("❌ Install dismissed");
+    }
+
+    setDeferredPrompt(null);
+  } else {
+    // ⚠️ Fallback (when install not available)
+    alert(
+      "To install:\n\n👉 Chrome: Click ⋮ menu → 'Install App'\n👉 Mobile: 'Add to Home Screen'"
+    );
+  }
+};
 
   useEffect(() => {
     if (emergencyWithFall === 'emergency') {
@@ -351,8 +374,15 @@ useEffect(() => {
     <>
       <WelcomeScreen onSelectRole={handleRoleSelect} />
 
-      {/* ✅ INSTALL BUTTON (VISIBLE ON FIRST SCREEN) */}
-      
+      {/* 🚀 INSTALL BUTTON */}
+     <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
+  <button
+    onClick={handleInstallClick}
+    className="bg-primary text-white px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition-transform"
+  >
+    📲 Install NeuroTrack App
+  </button>
+</div>
     </>
   );
   if (userRole === 'patient' && !isRegistered) return <PatientRegistration onRegister={handleRegister} />;
@@ -414,29 +444,7 @@ useEffect(() => {
         </header>
         <div className="p-6 max-w-6xl">{renderContent()}</div>
         
-  <button
-  onClick={async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-
-      const choice = await deferredPrompt.userChoice;
-
-      if (choice.outcome === "accepted") {
-        console.log("✅ App Installed");
-      } else {
-        console.log("❌ Install Cancelled");
-      }
-
-      setDeferredPrompt(null);
-    } else {
-      // 👉 fallback if install not supported
-      alert("Install not supported here. Please use Chrome → Add to Home Screen.");
-    }
-  }}
-  className="fixed bottom-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50"
->
-  📲 Install App
-</button>
+ 
       </main>
     </div>
   );
