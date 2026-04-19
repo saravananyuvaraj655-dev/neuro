@@ -391,64 +391,89 @@ useEffect(() => {
 
   // ---------- Main layout ----------
   return (
-    <div className="flex min-h-screen">
-      <AppSidebar activeSection={activeSection} onSectionChange={setActiveSection} userRole={userRole} />
-      <main className="flex-1 min-h-screen overflow-auto">
-        <header className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-6 py-3 flex items-center justify-between">
-          <div>
-            <h1 className="font-display text-xl font-bold text-foreground">{sectionTitles[activeSection]}</h1>
-            {isDoctorView ? (
-              <p className="text-xs text-muted-foreground">Doctor Panel · {new Date().toLocaleDateString()}</p>
+    <div className="flex min-h-screen w-full">
+
+  {/* ✅ Sidebar hidden on mobile */}
+  <div className="hidden md:block">
+    <AppSidebar
+      activeSection={activeSection}
+      onSectionChange={setActiveSection}
+      userRole={userRole}
+    />
+  </div>
+
+  {/* ✅ Main Content */}
+  <main className="flex-1 w-full min-h-screen overflow-auto">
+
+    {/* Header */}
+    <header className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4 md:px-6 py-3 flex items-center justify-between">
+      <div>
+        <h1 className="font-display text-lg md:text-xl font-bold text-foreground">
+          {sectionTitles[activeSection]}
+        </h1>
+
+        {isDoctorView ? (
+          <p className="text-xs text-muted-foreground">
+            Doctor Panel · {new Date().toLocaleDateString()}
+          </p>
+        ) : (
+          <p className="text-xs text-muted-foreground">
+            Patient: {patient?.fullName} ({patientId}) · Last update:{' '}
+            {lastUpdated.toLocaleTimeString()}
+          </p>
+        )}
+      </div>
+
+      <div className="flex items-center gap-3 md:gap-4">
+
+        {!isDoctorView && (
+          <div className="flex items-center gap-1.5 text-xs">
+            {isConnected ? (
+              <>
+                <Wifi className="w-3.5 h-3.5 text-vital-normal" />
+                <span className="text-muted-foreground">
+                  {patient?.blynkAuthToken ? 'Blynk Connected' : 'Simulated'}
+                </span>
+              </>
             ) : (
-              <p className="text-xs text-muted-foreground">
-                Patient: {patient?.fullName} ({patientId}) · Last update:{' '}
-                {lastUpdated.toLocaleTimeString()}
-              </p>
+              <>
+                <WifiOff className="w-3.5 h-3.5 text-vital-abnormal" />
+                <span className="text-destructive">Offline</span>
+              </>
             )}
           </div>
-          <div className="flex items-center gap-4">
-            {!isDoctorView && (
-              <div className="flex items-center gap-1.5 text-xs">
-                {isConnected ? (
-                  <>
-                    <Wifi className="w-3.5 h-3.5 text-vital-normal" />
-                    <span className="text-muted-foreground">
-                      {patient?.blynkAuthToken ? 'Blynk Connected' : 'Simulated'}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <WifiOff className="w-3.5 h-3.5 text-vital-abnormal" />
-                    <span className="text-destructive">Offline</span>
-                  </>
-                )}
-              </div>
-            )}
-            <button className="relative p-2 rounded-lg hover:bg-muted transition-colors">
-              <Bell className="w-4 h-4 text-muted-foreground" />
-              {!isDoctorView && emergencyWithFall !== 'normal' && (
-                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-destructive" />
-              )}
-            </button>
-            <button onClick={handleLogout} className="p-2 rounded-lg hover:bg-muted transition-colors" title="Logout">
-              <LogOut className="w-4 h-4 text-muted-foreground" />
-            </button>
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-display font-bold text-primary">
-              {isDoctorView
-                ? 'Dr'
-                : patient?.fullName
-                    .split(' ')
-                    .map((n) => n[0])
-                    .join('')
-                    .slice(0, 2)}
-            </div>
-          </div>
-        </header>
-        <div className="p-6 max-w-6xl">{renderContent()}</div>
-        
- 
-      </main>
+        )}
+
+        <button className="relative p-2 rounded-lg hover:bg-muted transition-colors">
+          <Bell className="w-4 h-4 text-muted-foreground" />
+        </button>
+
+        <button
+          onClick={handleLogout}
+          className="p-2 rounded-lg hover:bg-muted transition-colors"
+        >
+          <LogOut className="w-4 h-4 text-muted-foreground" />
+        </button>
+
+        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-display font-bold text-primary">
+          {isDoctorView
+            ? 'Dr'
+            : patient?.fullName
+                .split(' ')
+                .map((n) => n[0])
+                .join('')
+                .slice(0, 2)}
+        </div>
+      </div>
+    </header>
+
+    {/* ✅ Responsive Content */}
+    <div className="p-4 md:p-6 w-full max-w-6xl mx-auto">
+      {renderContent()}
     </div>
+
+  </main>
+</div>
   );
 };
 

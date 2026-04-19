@@ -268,48 +268,93 @@ const PatientLookup = () => {
 
   // Default: Patient list view
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <Search className="w-5 h-5 text-primary" />
-          <h2 className="font-display text-xl font-bold text-foreground">Patient Lookup</h2>
-        </div>
-        <Button size="sm" onClick={() => setViewMode('otp-verify')}>
-          <Shield className="w-3.5 h-3.5 mr-1" /> Verify & View Patient
-        </Button>
+  <div className="space-y-4 w-full max-w-full overflow-hidden">
+    
+    {/* Header */}
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div className="flex items-center gap-2">
+        <Search className="w-5 h-5 text-primary" />
+        <h2 className="font-display text-lg md:text-xl font-bold text-foreground">
+          Patient Lookup
+        </h2>
       </div>
 
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <Input placeholder="Search by name, ID, or phone..." className="pl-9" value={query} onChange={e => setQuery(e.target.value)} />
-      </div>
+      <Button
+        size="sm"
+        onClick={() => setViewMode('otp-verify')}
+        className="w-full md:w-auto"
+      >
+        <Shield className="w-3.5 h-3.5 mr-1" />
+        Verify & View Patient
+      </Button>
+    </div>
 
-      <div className="grid gap-3">
-        {filtered.map(p => (
-          <div key={p.id} className="rounded-xl border border-border bg-card p-4 flex items-center justify-between hover:bg-muted/30 transition-colors" style={{ boxShadow: 'var(--shadow-card)' }}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <User className="w-4 h-4 text-primary" />
-              </div>
-              <div>
-                <p className="font-semibold text-foreground text-sm">{p.name}</p>
-                <p className="text-xs text-muted-foreground">{p.id} · {p.gender} · Age {p.age} · {p.bloodGroup} · {p.doctor}</p>
-                <p className="text-xs text-muted-foreground">{p.conditions}</p>
-              </div>
+    {/* Search */}
+    <div className="relative">
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      <Input
+        placeholder="Search by name, ID, or phone..."
+        className="pl-9 w-full"
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+      />
+    </div>
+
+    {/* Patient List */}
+    <div className="flex flex-col gap-3">
+      {filtered.map(p => (
+        <div
+          key={p.id}
+          className="rounded-xl border border-border bg-card p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+          style={{ boxShadow: 'var(--shadow-card)' }}
+        >
+          {/* Left */}
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <User className="w-4 h-4 text-primary" />
             </div>
-            <div className="flex items-center gap-2">
-              <span className={statusBadge(p.conditions)}>
-                {p.conditions.includes('Stroke') || p.conditions.includes('Heart') ? 'Critical' : p.conditions.includes('Hypertension') || p.conditions.includes('Epilepsy') ? 'Monitor' : 'Stable'}
-              </span>
-              <Button size="sm" variant="outline" onClick={() => handleViewPatient(p)}>
-                <Eye className="w-3.5 h-3.5 mr-1" /> View
-              </Button>
+
+            <div className="min-w-0">
+              <p className="font-semibold text-foreground text-sm">
+                {p.name}
+              </p>
+
+              <p className="text-xs text-muted-foreground break-words">
+                {p.id} · {p.gender} · Age {p.age} · {p.bloodGroup}
+              </p>
+
+              <p className="text-xs text-muted-foreground break-words">
+                {p.conditions}
+              </p>
             </div>
           </div>
-        ))}
-      </div>
+
+          {/* Right */}
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 w-full md:w-auto">
+            
+            <span className={`${statusBadge(p.conditions)} text-center`}>
+              {p.conditions.includes('Stroke') || p.conditions.includes('Heart')
+                ? 'Critical'
+                : p.conditions.includes('Hypertension') || p.conditions.includes('Epilepsy')
+                ? 'Monitor'
+                : 'Stable'}
+            </span>
+
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleViewPatient(p)}
+              className="w-full md:w-auto"
+            >
+              <Eye className="w-3.5 h-3.5 mr-1" />
+              View
+            </Button>
+          </div>
+        </div>
+      ))}
     </div>
-  );
+  </div>
+);
 };
 
 export default PatientLookup;
