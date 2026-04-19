@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Heart } from 'lucide-react';
+import { Heart, Activity, Stethoscope } from 'lucide-react';
 import EmailOTPVerification from '../components/EmailOTPVerification';
 
 const Login = () => {
@@ -9,28 +9,64 @@ const Login = () => {
   const [email, setEmail] = useState('');
 
   const handleVerified = () => {
-    localStorage.setItem('neurotrack_authed_email', email.trim());
-    // Preserve existing role or default to patient if profile exists
-    const hasProfile = !!localStorage.getItem('neurotrack_patient');
+    localStorage.setItem('neurotrack_authed_user', email.trim());
+
+    // Determine role — if a patient profile has this email, go patient; else doctor
+    const savedPatient = localStorage.getItem('neurotrack_patient');
+    if (savedPatient) {
+      try {
+        const p = JSON.parse(savedPatient);
+        if (p.email === email.trim()) {
+          localStorage.setItem('neurotrack_role', 'patient');
+          navigate('/');
+          return;
+        }
+      } catch {
+        // ignore parse error
+      }
+    }
+
+    // Preserve existing role if already set, else default to doctor
     if (!localStorage.getItem('neurotrack_role')) {
-      localStorage.setItem('neurotrack_role', hasProfile ? 'patient' : 'doctor');
+      localStorage.setItem('neurotrack_role', 'doctor');
     }
     navigate('/');
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+      </div>
+
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md space-y-6"
+        className="w-full max-w-md space-y-6 relative z-10"
       >
+        {/* Logo */}
         <div className="text-center">
-          <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center mx-auto mb-3">
-            <Heart className="w-7 h-7 text-primary-foreground" />
+          <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <Heart className="w-8 h-8 text-primary-foreground" />
           </div>
-          <h1 className="font-display text-2xl font-bold text-foreground">Welcome back</h1>
-          <p className="text-sm text-muted-foreground mt-1">Login to NeuroTrack with your email</p>
+          <h1 className="font-display text-3xl font-bold text-foreground">NeuroTrack</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            Real-Time Neuro-Vitals Monitoring
+          </p>
+        </div>
+
+        {/* Role indicators */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl border border-border bg-card/50 p-3 flex items-center gap-2">
+            <Activity className="w-4 h-4 text-primary shrink-0" />
+            <span className="text-xs text-muted-foreground">Patient login</span>
+          </div>
+          <div className="rounded-xl border border-border bg-card/50 p-3 flex items-center gap-2">
+            <Stethoscope className="w-4 h-4 text-primary shrink-0" />
+            <span className="text-xs text-muted-foreground">Doctor login</span>
+          </div>
         </div>
 
         <EmailOTPVerification
@@ -38,16 +74,24 @@ const Login = () => {
           onEmailChange={setEmail}
           editableEmail
           onVerified={handleVerified}
-          title="Login with email"
-          subtitle="Enter your registered email to receive a 6-digit OTP."
+          title="Welcome back"
+          subtitle="Enter your email to receive a one-time login code."
         />
 
-        <p className="text-center text-xs text-muted-foreground">
-          New to NeuroTrack?{' '}
-          <Link to="/signup" className="text-primary font-semibold hover:underline">
-            Create an account
-          </Link>
-        </p>
+        <div className="text-center space-y-2">
+          <p className="text-xs text-muted-foreground">
+            New patient?{' '}
+            <Link to="/signup" className="text-primary font-semibold hover:underline">
+              Create account
+            </Link>
+          </p>
+          <p className="text-xs text-muted-foreground">
+            New doctor?{' '}
+            <Link to="/doctor-signup" className="text-primary font-semibold hover:underline">
+              Doctor registration
+            </Link>
+          </p>
+        </div>
       </motion.div>
     </div>
   );

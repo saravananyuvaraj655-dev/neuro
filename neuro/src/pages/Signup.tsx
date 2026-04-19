@@ -28,24 +28,23 @@ const Signup = () => {
   const navigate = useNavigate();
   const [pendingProfile, setPendingProfile] = useState<PatientFormData | null>(null);
 
-  // Receive form data from PatientRegistration; hold until OTP verified
+  // Called when PatientRegistration form is submitted
   const handleRegisterAttempt = (data: PatientFormData) => {
     setPendingProfile(data);
   };
 
-  // OTP verified → persist profile and redirect
+  // Called after OTP is verified successfully
   const handleVerified = () => {
     if (!pendingProfile) return;
     localStorage.setItem('neurotrack_patient', JSON.stringify(pendingProfile));
     localStorage.setItem('neurotrack_role', 'patient');
-    localStorage.setItem('neurotrack_authed_email', pendingProfile.email);
+    localStorage.setItem('neurotrack_authed_user', pendingProfile.email);
     navigate('/');
   };
 
-  // OTP verification step (shown after form submit)
   if (pendingProfile) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -53,23 +52,21 @@ const Signup = () => {
         >
           <button
             onClick={() => setPendingProfile(null)}
-            className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+            className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
           >
-            <ArrowLeft className="w-3 h-3" /> Back to form
+            <ArrowLeft className="w-3 h-3" /> Back to registration form
           </button>
-
           <EmailOTPVerification
             email={pendingProfile.email}
             onVerified={handleVerified}
             title="Confirm your email"
-            subtitle="We need to verify your email before creating your account."
+            subtitle="One last step — verify your email to activate your account."
           />
         </motion.div>
       </div>
     );
   }
 
-  // Registration form step
   return (
     <div>
       <PatientRegistration onRegister={handleRegisterAttempt} />
