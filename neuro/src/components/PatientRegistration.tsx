@@ -355,10 +355,19 @@ const PatientRegistration = ({ onRegister }: PatientRegistrationProps) => {
                 </div>
               </div>
 
-              <div className="flex justify-between pt-4">
-                <Button variant="ghost" onClick={() => setStep(2)}>Back</Button>
-                <Button type="button" onClick={handleSubmit} disabled={!canSubmit}>register &start Monitoring</Button>
-              </div>
+             <div className="flex justify-between pt-4">
+  <Button variant="ghost" onClick={() => setStep(2)}>Back</Button>
+
+  <Button
+    type="button"   // ✅ ADD THIS
+    onClick={handleSubmit}
+    disabled={!canSubmit}
+    className="medical-gradient border-0 text-primary-foreground"
+  >
+    <UserPlus className="w-4 h-4 mr-1" />
+    Register & Start Monitoring
+  </Button>
+</div>
             </motion.div>
           )}
         </div>
