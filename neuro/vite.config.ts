@@ -10,7 +10,7 @@ export default defineConfig({
       includeAssets: ['favicon.svg', 'robots.txt'],
 
       manifest: {
-        name: 'NeuroTrack AI',
+        name: 'NeuroTrack',
         short_name: 'NeuroTrack',
         description: 'AI-Based Medical Assistant App',
         theme_color: '#0f172a',
