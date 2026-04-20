@@ -86,7 +86,19 @@ export async function fetchBlynkVitals(token: string): Promise<{
       fetchBlynkPin(token, BLYNK_PIN_MAP.fallDetection),
       fetchBlynkPin(token, BLYNK_PIN_MAP.ecg),
     ]);
+const formatBP = (sys: number, dia: number): string => {
+  if (sys > 1000 && dia === 0) {
+    const sbp = Math.floor(sys / 100);
+    const dbp = sys % 100;
+    return `${sbp}/${dbp}`;
+  }
 
+  if (!sys || !dia || sys < 50 || dia < 30) {
+    return "Invalid BP";
+  }
+
+  return `${sys}/${dia}`;
+};
     // Check device connectivity
     const { online } = await validateBlynkToken(token);
 
@@ -115,7 +127,7 @@ export async function fetchBlynkVitals(token: string): Promise<{
       { id: 'pulse', name: 'Pulse Rate', value: pulseVal.toString(), unit: 'bpm', icon: '💓', status: checkPulseRate(pulseVal) },
       { id: 'spo2', name: 'SpO₂', value: spo2Val.toString(), unit: '%', icon: '🫁', status: checkSpO2(spo2Val) },
       { id: 'rr', name: 'Respiratory Rate', value: rrVal.toString(), unit: 'br/min', icon: '🫁', status: checkRespiratoryRate(rrVal) },
-      { id: 'bp', name: 'Blood Pressure', value: `${bpSysVal}/${bpDiaVal}`, unit: 'mmHg', icon: '🩸', status: bpStatus },
+      { id: 'bp', name: 'Blood Pressure', value: formatBP(bpSysVal, bpDiaVal), unit: 'mmHg', icon: '🩸', status: bpStatus },
       { id: 'gsr', name: 'Skin Conductance', value: Math.max(0, gsrVal).toFixed(1), unit: 'µS', icon: '⚡', status: checkGSR(Math.max(0, gsrVal)) },
       { id: 'hydration', name: 'Hydration Level', value: Math.max(0, hydrationVal).toFixed(1), unit: 'µS', icon: '💧', status: checkGSR(Math.max(0, hydrationVal)) },
     ];

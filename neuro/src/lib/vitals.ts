@@ -105,7 +105,19 @@ export function checkGSR(value: number): VitalStatus {
 export function checkPulseRate(value: number): VitalStatus {
   return checkHeartRate(value);
 }
+export const formatBP = (value: number | string): string => {
+  const num = Number(value);
 
+  // ❌ Invalid values
+  if (!num || num < 1000) return "Invalid BP";
+
+  const sbp = Math.floor(num / 100);
+  const dbp = num % 100;
+
+  if (sbp < 50 || dbp < 30) return "Invalid BP";
+
+  return `${sbp}/${dbp}`;
+};
 // Generate simulated vitals with slight variations
 export function generateSimulatedVitals(prevVitals?: VitalSign[]): VitalSign[] {
   const jitter = (base: number, range: number) => base + (Math.random() - 0.5) * range;
