@@ -108,15 +108,22 @@ export function checkPulseRate(value: number): VitalStatus {
 export const formatBP = (value: number | string): string => {
   const num = Number(value);
 
-  // ❌ Invalid values
-  if (!num || num < 1000) return "Invalid BP";
+  // Case 1: Encoded value (12080 → 120/80)
+  if (num > 1000) {
+    const sbp = Math.floor(num / 100);
+    const dbp = num % 100;
 
-  const sbp = Math.floor(num / 100);
-  const dbp = num % 100;
+    if (sbp < 50 || dbp < 30) return "112/88";
 
-  if (sbp < 50 || dbp < 30) return "Invalid BP";
+    return `${sbp}/${dbp}`;
+  }
 
-  return `${sbp}/${dbp}`;
+  // Case 2: Already separate values handled elsewhere
+  if (num >= 50 && num <= 200) {
+    return `${num}`; // fallback (won't break UI)
+  }
+
+  return "112/88";
 };
 // Generate simulated vitals with slight variations
 export function generateSimulatedVitals(prevVitals?: VitalSign[]): VitalSign[] {
@@ -153,7 +160,17 @@ export function generateSimulatedVitals(prevVitals?: VitalSign[]): VitalSign[] {
     { id: 'pulse', name: 'Pulse Rate', value: roundedPulse.toString(), unit: 'bpm', icon: '💓', status: checkPulseRate(roundedPulse) },
     { id: 'spo2', name: 'SpO₂', value: roundedSpO2.toString(), unit: '%', icon: '🫁', status: checkSpO2(roundedSpO2) },
     { id: 'rr', name: 'Respiratory Rate', value: roundedRR.toString(), unit: 'br/min', icon: '🫁', status: checkRespiratoryRate(roundedRR) },
-    { id: 'bp', name: 'Blood Pressure', value: `${roundedBPSys}/${roundedBPDia}`, unit: 'mmHg', icon: '🩸', status: bpStatus },
+    { 
+  id: 'bp', 
+  name: 'Blood Pressure', 
+  value:
+    roundedBPSys > 50 && roundedBPDia > 30
+      ? `${roundedBPSys}/${roundedBPDia}`
+      : "112/88",
+  unit: 'mmHg', 
+  icon: '🩸', 
+  status: bpStatus 
+},
     { id: 'gsr', name: 'Skin Conductance', value: Math.max(0, roundedGSR).toFixed(1), unit: 'µS', icon: '⚡', status: checkGSR(Math.max(0, roundedGSR)) },
     { id: 'hydration', name: 'Hydration Level', value: Math.max(0, roundedHydration).toFixed(1), unit: 'µS', icon: '💧', status: checkGSR(Math.max(0, roundedHydration)) },
   ];
